@@ -1,1 +1,144 @@
-<!DOCTYPE html><html lang="bg"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"><title>QUANTUM OMEGA | TRAJECTORY ANALYSIS v7.1</title><style>/* --- OMEGA PROTOCOL UI/UX v7.1 --- */:root {--neon-blue: #00f3ff;--neon-green: #00ff9d;--neon-red: #ff0055;--neon-gold: #ffcc00;--bg-dark: #000000;--panel-bg: rgba(5, 15, 25, 0.92);--font-main: 'Segoe UI', 'Roboto', monospace;--glass: blur(12px);}body {margin: 0;overflow: hidden;background: var(--bg-dark);font-family: var(--font-main);color: #ccc;}#canvas-container {position: absolute;top: 0;left: 0;width: 100%;height: 100%;z-index: 1;}.panel {position: absolute;background: var(--panel-bg);border: 1px solid rgba(0, 100, 150, 0.5);padding: 12px;border-radius: 6px;z-index: 100;backdrop-filter: var(--glass);box-shadow: 0 0 25px rgba(0, 0, 0, 0.7);transition: opacity 0.5s ease-in-out;max-height: 95vh;overflow-y: auto;scrollbar-width: none;font-size: 11px;}.panel::-webkit-scrollbar {display: none;}h1 {margin: 0 0 8px 0;font-size: 12px;color: var(--neon-blue);border-bottom: 2px solid #333;padding-bottom: 5px;letter-spacing: 1px;text-transform: uppercase;}h2 {margin: 10px 0 5px 0;font-size: 11px;color: var(--neon-gold);border-left: 3px solid var(--neon-gold);padding-left: 5px;text-transform: uppercase;}#p-trajectory {top: 20px;left: 20px;width: 400px;border-color: var(--neon-red);}.progress-bar-bg {background: #333;height: 4px;width: 100%;margin: 5px 0;}#eta-progress {height: 100%;background: var(--neon-red);width: 0%;transition: width 1s;}#p-env {top: 20px;right: 20px;width: 340px;}#meteo-graph {width: 100%;opacity: 0.85;margin-top: 10px;background: #fff;border-radius: 2px;}#p-hazards {bottom: 20px;right: 20px;width: 340px;}#p-controls {bottom: 20px;left: 20px;display: flex;gap: 10px;z-index: 100;}.grid-2 {display: grid;grid-template-columns: 1fr 1fr;gap: 8px;}.data-box {background: rgba(255, 255, 255, 0.05);padding: 8px;border-radius: 4px;text-align: center;}.val {font-size: 14px;font-weight: bold;color: #fff;display: block;}.lbl {font-size: 9px;color: #aaa;text-transform: uppercase;}.good {color: var(--neon-green);}.warn {color: var(--neon-gold);}.crit {color: var(--neon-red);animation: flash 1s infinite;}.ctrl-btn {background: rgba(0, 0, 0, 0.8);border: 1px solid var(--neon-blue);color: var(--neon-blue);padding: 10px 20px;border-radius: 20px;cursor: pointer;font-weight: bold;text-transform: uppercase;font-size: 11px;}@keyframes flash {50% {opacity: 0.3;}}</style><script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" }}</script></head><body><div id="canvas-container"><canvas></canvas></div><div id="p-trajectory" class="panel"><h1 style="color:var(--neon-red)">CME TRAJECTORY ANALYSIS</h1><div class="data-row"><span class="lbl">STATUS:</span> <span id="cme-status" class="val warn">NASA API OFFLINE</span></div><div class="data-row"><span class="lbl">SPEED:</span> <span id="cme-speed" class="val">--</span></div><div class="data-row"><span class="lbl">EST. ARRIVAL (ETA):</span> <span id="cme-eta" class="val">--</span></div><h2>IMPACT PROGRESS:</h2><div class="progress-bar-bg"><div id="eta-progress"></div></div></div><div id="p-env" class="panel"><h1>ENVIRONMENTAL SCAN (RUSE)</h1><div class="grid-2"><div class="data-box"><span id="env-temp" class="val">--</span><span class="lbl">TEMP (°C)</span></div><div class="data-box"><span id="env-air" class="val">--</span><span class="lbl">PM2.5</span></div></div><img id="meteo-graph" src="" alt="Meteogram"></div><div id="p-hazards" class="panel"><h1>THREAT ASSESSMENT</h1><h2>SOLAR EVENTS</h2><div class="grid-2"><div class="data-box"><span id="val-flare" class="val">--</span><span class="lbl">FLARE</span></div><div class="data-box"><span id="val-kp" class="val">--</span><span class="lbl">Kp INDEX</span></div></div><h2>SENTRY: NEAR-EARTH OBJECTS</h2><div id="sentry-list"></div></div><div id="p-controls"><div class="ctrl-btn" onclick="generateReport()">📄 REPORT</div><div class="ctrl-btn" onclick="resetCam()">🎥 RESET VIEW</div></div><script type="module">/* omitted for brevity in thought, but I will include it in the real call */</script></body></html>
+<!DOCTYPE html>
+<html lang="bg"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>QUANTUM OMEGA | TRAJECTORY ANALYSIS v7.1</title>
+    <style>
+        :root { --neon-blue: #00f3ff; --neon-green: #00ff9d; --neon-red: #ff0055; --neon-gold: #ffcc00; --bg-dark: #000000; --panel-bg: rgba(5, 15, 25, 0.92); --font-main: 'Segoe UI', 'Roboto', monospace; --glass: blur(12px); }
+        body { margin: 0; overflow: hidden; background: var(--bg-dark); font-family: var(--font-main); color: #ccc; }
+        #canvas-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .panel { position: absolute; background: var(--panel-bg); border: 1px solid rgba(0, 100, 150, 0.5); padding: 12px; border-radius: 6px; z-index: 100; backdrop-filter: var(--glass); box-shadow: 0 0 25px rgba(0, 0, 0, 0.7); transition: opacity 0.5s ease-in-out; max-height: 95vh; overflow-y: auto; scrollbar-width: none; font-size: 11px; }
+        .panel::-webkit-scrollbar { display: none; }
+        h1 { margin: 0 0 8px 0; font-size: 12px; color: var(--neon-blue); border-bottom: 2px solid #333; padding-bottom: 5px; letter-spacing: 1px; text-transform: uppercase; }
+        h2 { margin: 10px 0 5px 0; font-size: 11px; color: var(--neon-gold); border-left: 3px solid var(--neon-gold); padding-left: 5px; text-transform: uppercase; }
+        #p-trajectory { top: 20px; left: 20px; width: 400px; border-color: var(--neon-red); }
+        .progress-bar-bg { background: #333; height: 4px; width: 100%; margin: 5px 0; }
+        #eta-progress { height: 100%; background: var(--neon-red); width: 0%; transition: width 1s; }
+        #p-env { top: 20px; right: 20px; width: 340px; }
+        #meteo-graph { width: 100%; opacity: 0.85; margin-top: 10px; background: #fff; border-radius: 2px; }
+        #p-hazards { bottom: 20px; right: 20px; width: 340px; }
+        #p-controls { bottom: 20px; left: 20px; display: flex; gap: 10px; z-index: 100; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+        .data-box { background: rgba(255, 255, 255, 0.05); padding: 8px; border-radius: 4px; text-align: center; }
+        .val { font-size: 14px; font-weight: bold; color: #fff; display: block; }
+        .lbl { font-size: 9px; color: #aaa; text-transform: uppercase; }
+        .good { color: var(--neon-green); } .warn { color: var(--neon-gold); } .crit { color: var(--neon-red); animation: flash 1s infinite; }
+        .ctrl-btn { background: rgba(0, 0, 0, 0.8); border: 1px solid var(--neon-blue); color: var(--neon-blue); padding: 10px 20px; border-radius: 20px; cursor: pointer; font-weight: bold; text-transform: uppercase; font-size: 11px; }
+        @keyframes flash { 50% { opacity: 0.3; } }
+    </style>
+    <script type="importmap">{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js", "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" }}<\/script>
+</head>
+<body>
+    <div id="canvas-container"></div>
+    <div id="p-trajectory" class="panel">
+        <h1 style="color:var(--neon-red)">CME TRAJECTORY ANALYSIS</h1>
+        <div class="data-row"><span class="lbl">STATUS:</span> <span id="cme-status" class="val crit">IMPACT IMMINENT</span></div>
+        <div class="data-row"><span class="lbl">SPEED:</span> <span id="cme-speed" class="val">628</span></div>
+        <div class="data-row"><span class="lbl">EST. ARRIVAL (ETA):</span> <span id="cme-eta" class="val">4.01.2026 г., 17:17:00 ч.</span></div>
+        <h2>IMPACT PROGRESS:</h2>
+        <div class="progress-bar-bg"><div id="eta-progress" style="width: 100%;"></div></div>
+    </div>
+    <div id="p-env" class="panel">
+        <h1>ENVIRONMENTAL SCAN (RUSE)</h1>
+        <div class="grid-2">
+            <div class="data-box"><span id="env-temp" class="val">4.06</span><span class="lbl">TEMP (°C)</span></div>
+            <div class="data-box"><span id="env-air" class="val">27.5</span><span class="lbl">PM2.5</span></div>
+        </div>
+        <img id="meteo-graph" src="https://my.meteoblue.com/vis/meteogram_web/43.84N25.95E?apikey=OBtZPbyfmMnKJETv&mac=linear&sig=0" alt="Meteogram">
+    </div>
+    <div id="p-hazards" class="panel">
+        <h1>THREAT ASSESSMENT</h1>
+        <h2>SOLAR EVENTS</h2>
+        <div class="grid-2">
+            <div class="data-box"><span id="val-flare" class="val good">C6.2</span><span class="lbl">FLARE</span></div>
+            <div class="data-box"><span id="val-kp" class="val good">5</span><span class="lbl">Kp INDEX</span></div>
+        </div>
+        <h2>SENTRY: NEAR-EARTH OBJECTS</h2>
+        <div id="sentry-list"><div class="crit">DATA LINK LOST</div></div>
+    </div>
+    <div id="p-controls">
+        <div class="ctrl-btn" onclick="generateReport()">📄 REPORT</div>
+        <div class="ctrl-btn" onclick="resetCam()">🎥 RESET VIEW</div>
+    </div>
+    <script>
+        function generateReport() { const d = new Date().toLocaleString(); alert(`--- SITREP: ${d} ---\nTEMP: ${document.getElementById('env-temp').innerText}°C\nAIR: ${document.getElementById('env-air').innerText} AQI\nFLARE: ${document.getElementById('val-flare').innerText}\nCME ETA: ${document.getElementById('cme-eta').innerText}`); }
+    <\/script>
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        const KEYS = { nasa: "H68O2KekBuEHFh9oafQMS2EBEHlB5s7LgMCSq39H", meteo: "OBtZPbyfmMnKJETv" };
+        const RUSE = { lat: 43.84, lon: 25.95 };
+        let cmeData = null;
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 50000);
+        camera.position.set(0, 100, 400);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById('canvas-container').appendChild(renderer.domElement);
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.autoRotate = true; controls.autoRotateSpeed = 0.3;
+        window.resetCam = () => { camera.position.set(0, 100, 400); controls.target.set(0, 0, 0); };
+        const texLoader = new THREE.TextureLoader();
+        const planets = [];
+        function createBody(name, r, dist, tex, color, speed) {
+            const pivot = new THREE.Group(); scene.add(pivot);
+            const mat = tex ? new THREE.MeshPhongMaterial({ map: texLoader.load(tex) }) : new THREE.MeshPhongMaterial({ color });
+            const mesh = new THREE.Mesh(new THREE.SphereGeometry(r, 32, 32), mat); mesh.position.set(dist, 0, 0); pivot.add(mesh);
+            planets.push({ pivot, mesh, speed }); return { pivot, mesh };
+        }
+        const sun = new THREE.Mesh(new THREE.SphereGeometry(25, 64, 64), new THREE.MeshBasicMaterial({ map: texLoader.load('https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_0193.jpg') }));
+        scene.add(sun);
+        createBody("Mercury", 2, 40, null, 0xaaaaaa, 0.02);
+        createBody("Venus", 3.5, 70, null, 0xffcc00, 0.015);
+        const earthObj = createBody("Earth", 4, 120, 'https://unpkg.com/three-globe/example/img/earth-blue-marble.jpg', null, 0.01);
+        const cmeHead = new THREE.Mesh(new THREE.SphereGeometry(2, 16, 16), new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0 }));
+        scene.add(cmeHead);
+        scene.add(new THREE.PointLight(0xffffff, 2, 1000));
+        scene.add(new THREE.AmbientLight(0x222222));
+        const UI = { temp: document.getElementById('env-temp'), air: document.getElementById('env-air'), kp: document.getElementById('val-kp'), flare: document.getElementById('val-flare'), status: document.getElementById('cme-status'), eta: document.getElementById('cme-eta'), progress: document.getElementById('eta-progress'), sentry: document.getElementById('sentry-list') };
+        async function fetchWithRetry(url, options = {}, retries = 3) {
+            try { const response = await fetch(url, options); if (!response.ok) throw new Error(`HTTP ${response.status}`); return await response.json(); }
+            catch (err) { if (retries > 0) return fetchWithRetry(url, options, retries - 1); throw err; }
+        }
+        async function syncData() {
+            const d = new Date(), today = d.toISOString().split('T')[0], d30 = new Date(d - 30 * 864e5).toISOString().split('T')[0];
+            fetchWithRetry(`https://my.meteoblue.com/packages/basic-1h_basic-day?lat=${RUSE.lat}&lon=${RUSE.lon}&apikey=${KEYS.meteo}&as_classes=true`).then(d => UI.temp.innerText = d.data_1h.temperature[0]);
+            fetchWithRetry(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${RUSE.lat}&longitude=${RUSE.lon}&current=pm2_5`).then(d => UI.air.innerText = d.current.pm2_5);
+            try {
+                const [gstD, flrD, cmeD] = await Promise.all([ fetchWithRetry(`https://api.nasa.gov/DONKI/GST?startDate=${d30}&endDate=${today}&api_key=${KEYS.nasa}`), fetchWithRetry(`https://api.nasa.gov/DONKI/FLR?startDate=${d30}&endDate=${today}&api_key=${KEYS.nasa}`), fetchWithRetry(`https://api.nasa.gov/DONKI/CME?startDate=${d30}&endDate=${today}&api_key=${KEYS.nasa}`) ]);
+                UI.kp.innerText = Math.floor(gstD.length ? gstD.pop().allKpIndex.pop().kpIndex : 1);
+                UI.flare.innerText = flrD.length ? flrD.pop().classType : "None";
+                let activeCME = null;
+                for (let i = cmeD.length - 1; i >= 0; i--) {
+                    const cme = cmeD[i];
+                    if (cme.cmeAnalyses) {
+                        for (const analysis of cme.cmeAnalyses) {
+                            if (analysis.enlilList && analysis.enlilList.length > 0) {
+                                const eta = analysis.enlilList[0].estimatedShockArrivalTime;
+                                if (eta && new Date(eta) > new Date(Date.now() - 12 * 3600 * 1000)) {
+                                    activeCME = { startTime: new Date(cme.startTime).getTime(), etaTime: new Date(eta).getTime(), speed: analysis.speed };
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    if (activeCME) break;
+                }
+                if (activeCME) { cmeData = activeCME; UI.status.innerText = "IMPACT IMMINENT"; UI.status.className = "val crit"; UI.eta.innerText = new Date(cmeData.etaTime).toLocaleString(); }
+                else { UI.status.innerText = "NOMINAL"; UI.status.className = "val good"; UI.progress.style.width = "0%"; UI.eta.innerText = "--"; cmeData = null; }
+            } catch (e) { console.error(e); }
+        }
+        function animate() {
+            requestAnimationFrame(animate);
+            planets.forEach(p => { p.pivot.rotation.y += p.speed * 0.1; });
+            if (cmeData) {
+                const progress = Math.max(0, Math.min(1, (Date.now() - cmeData.startTime) / (cmeData.etaTime - cmeData.startTime)));
+                UI.progress.style.width = progress * 100 + '%';
+                cmeHead.position.copy(sun.position).addScaledVector(new THREE.Vector3(1, 0, 0), 120 * progress);
+                cmeHead.material.opacity = 0.8;
+            }
+            controls.update(); renderer.render(scene, camera);
+        }
+        syncData(); animate(); setInterval(syncData, 60000);
+    <\/script>
+</body></html>
