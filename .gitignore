@@ -1,0 +1,14 @@
+node_modules/
+package-lock.json
+*.ps1
+*.bin
+*.pdf
+*.cpp
+*.exe
+*_OLD.*
+*.bak
+*~
+.DS_Store
+Thumbs.db
+.env
+.env.local
